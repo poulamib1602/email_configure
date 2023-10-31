@@ -2,25 +2,19 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const User = require('../module/user');
-
-// Registration route
 router.post('/register', async (req, res) => {
   const { name, email } = req.body;
-
   const newUser = new User({ name, email });
   await newUser.save();
-
-  // Send confirmation email
   const transporter = nodemailer.createTransport({
-    service: 'gmail', // e.g., 'Gmail' or 'Outlook'
+    service: 'gmail',
     auth: {
-      user: 'poulamib.albiorix@gmail.com',
-      pass: 'xxx',
+      user: process.env.email_user_id,
+      pass: process.env.email_user_id_pass,
     }
   });
-
   const mailOptions = {
-    from: 'poulamib.albiorix@gmail.com',
+    from: process.env.email_user_id,
     to: email,
     subject: 'Registration Confirmation',
     text: `Thank you for registering, ${name}!`,
@@ -36,5 +30,4 @@ router.post('/register', async (req, res) => {
     }
   });
 });
-
 module.exports = router;
